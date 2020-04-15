@@ -1,0 +1,33 @@
+{
+    "all_data_url": "https://raw.githubusercontent.com/yousenwang/DeepCOOH/master/DataAll_ETL.csv",
+    "local_source" : "./DataAll_ETL.csv",
+    "target" : "R1COOH",
+    "split_time_line" : "2020/02/16 12:00:00 AM",
+    "hand_pick_cols_drop" : [
+        "Line",
+        "CreatTime_Scada_CP6_14", 
+        "CreatTime_Scada_CP6_15",
+        "CreatTime_SPCData_CP6_14",
+        "CreatTime_SPCData_CP6_15",
+        "CreatTime", 
+        "SerialNo",
+        "SerialNo_SPCData_CP6_14",
+        "SerialNo_SPCData_CP6_15",
+        "Z_Capacity_GROUP_ID", 
+        "R2_TEMP_OP_NEXT_1_HR"
+    ],
+    "selected_features" :[
+        "SB_PPM",
+        "COA_PPM",
+        "R1_TEMP",
+        "R1_PRESSURE",
+        "R1_REFLUX_RATIO",
+        "R2_TEMP",
+        "R2_LEVEL",
+        "R2_REFLUX_RATIO",
+        "z_Capacity_SUM",
+        "z_Capacity_DIFF",
+        "Z_R1_LEVEL_RT"]
+    ,
+    "imputer_pkl_name": "imputer.pkl"
+}

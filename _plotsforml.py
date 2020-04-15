@@ -45,7 +45,7 @@ def data_correlation(train):
     plt.savefig(pic_name)
     print(f"{pic_name} was produced.")
 
-def plot_tuning_graph(y_true, y_pred, final_model, features, grid_result):
+def plot_tuning_graph(y_true, y_pred, final_model, features, grid_result=None):
     from sklearn.metrics import r2_score
     fin_r2 = r2_score(y_true, y_pred)
 
@@ -58,7 +58,9 @@ def plot_tuning_graph(y_true, y_pred, final_model, features, grid_result):
     plt.plot(xs,y_true, label = "True")
     plt.plot(xs,y_pred, label = f"{final_model.__class__.__name__} {fin_r2}", linestyle='dashed')
     plt.plot(xs,y_mean, label = "mean", linestyle='dashed')
-    plot_title = f'Num of Feats: {len(features)} Best: {grid_result.best_score_} \n using {grid_result.best_params_}'
+    plot_title = f"Num of Feats: {len(features)} "
+    if grid_result!=None:
+        plot_title+=f"Best: {grid_result.best_score_} \n using {grid_result.best_params_}"
     print(plot_title)
     print(f"test r^2 {fin_r2}")
     plt.title(plot_title)

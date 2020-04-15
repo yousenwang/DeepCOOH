@@ -6,6 +6,19 @@ Email: yousenwang@gmail.com
 
 import pandas as pd
 import numpy as np
+import pickle
+
+def save_object_as_pkl(obj, filename):
+    with open(filename, 'wb') as output:  # Overwrites any existing file.
+        pickle.dump(obj, output, pickle.HIGHEST_PROTOCOL)
+
+def load_object_from_pkl(filename):
+    with open(filename, 'rb') as input:
+        obj = pickle.load(input)
+    return obj
+
+def norm(x, train_stats):
+  return (x - train_stats['mean'])/train_stats['std']
 
 def get_labeled_dat(X_pd, label, verbose=False):
     X_pd = X_pd.loc[X_pd[label].notnull()]
