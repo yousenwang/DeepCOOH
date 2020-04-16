@@ -17,9 +17,6 @@ def load_object_from_pkl(filename):
         obj = pickle.load(input)
     return obj
 
-def norm(x, train_stats):
-  return (x - train_stats['mean'])/train_stats['std']
-
 def get_labeled_dat(X_pd, label, verbose=False):
     X_pd = X_pd.loc[X_pd[label].notnull()]
     X_pd.reset_index(inplace=True, drop=True)
@@ -36,7 +33,7 @@ def get_unlabeled_dat(X_pd, label, verbose=False):
         print(X_pd.shape)
     return X_pd
 
-def split_into_train_test_by(X_pd, time_col ,time_line, drop_col=False):
+def split_into_train_test_by(X_pd, time_col ,time_line, drop_col=False, verbose=False):
     time_mask = (X_pd[time_col]<time_line)
     train_pd = X_pd.loc[time_mask]
     test_pd = X_pd.loc[~time_mask]
@@ -45,6 +42,8 @@ def split_into_train_test_by(X_pd, time_col ,time_line, drop_col=False):
     if drop_col:
         train_pd.drop(time_col, axis=1, inplace=True)
         test_pd.drop(time_col, axis=1, inplace=True)
+    if verbose:
+        print(f"train: {train_pd.shape}, test: {test_pd.shape}")
     return train_pd, test_pd
 
 def drop_hand_pick_cols(X, columns, verbose=False):

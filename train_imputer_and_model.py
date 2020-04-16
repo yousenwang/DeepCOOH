@@ -1,5 +1,5 @@
 """
-Auther: Ethan Wang
+Auther: You Sen Wang (Ethan)
 Started Date: 04/15/2020
 Email: yousenwang@gmail.com
 """
@@ -12,7 +12,7 @@ import io
 from _pandashandler import (
     get_labeled_dat, get_unlabeled_dat, split_into_train_test_by, 
     drop_hand_pick_cols, load_is_cate_dict, drop_all_categorical_features,
-    get_valid_filename, norm, save_object_as_pkl)
+    get_valid_filename, save_object_as_pkl)
 
 config_source = "./shinkong-cooh-infofab.json"
 with open(config_source) as f:
@@ -38,7 +38,8 @@ DataAll_ELT_pd = drop_all_categorical_features(DataAll_ELT_pd, is_cate_dict, ver
 """
 Split Train and Test!
 """
-train_pd, test_pd = split_into_train_test_by(DataAll_ELT_pd, 'PdateTime', time_line=split_time_line, drop_col=True)
+DataAll_ELT_pd['PdateTime'] = pd.to_datetime(DataAll_ELT_pd['PdateTime'],format='%Y/%m/%d %H:%M:%S')
+train_pd, test_pd = split_into_train_test_by(DataAll_ELT_pd, 'PdateTime', time_line=split_time_line, drop_col=True, verbose=True)
 labeled_train = get_labeled_dat(train_pd, target, verbose=True)
 
 """
@@ -72,20 +73,26 @@ unique_name = get_valid_filename(unique_name)
 train_df = pd.DataFrame(imputer.fit_transform(unimputed_X), columns=unimputed_X_cols)
 #out_dat = pd.concat([out_dat_X, true_train_y], axis=1)
 
+
 pkl_name = config['imputer_pkl_name']
 save_object_as_pkl(imputer, pkl_name)
 
 
 features = config["selected_features"]
 
-train = train_df[features]
+if features == "all":
+  train = train_df
+else:
+  train = train_df[features]
 
-train_stats =   train.describe()
-train_stats = train_stats.transpose()
-path = f"./train_stats.csv"
-train_stats.to_csv(path, index=True, header=True)
+from sklearn.preprocessing import StandardScaler
 
-normed_train_X = norm(train, train_stats)
+scaler = StandardScaler()
+normed_train_X = pd.DataFrame(scaler.fit_transform(train.to_numpy()), columns=train.columns)
+
+plk_name_stand = 'standardizer.pkl'
+save_object_as_pkl(scaler, plk_name_stand)
+print(f"{scaler} saved.")
 
 from _keras_model import build_model, PrintDot
 
