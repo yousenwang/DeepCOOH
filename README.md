@@ -6,11 +6,11 @@ This project is about predicting COOH value with various features.
 and dropped all other features including some useful categorical features (7).
 
 # Users Friendly Steps
-!python train_imputer_and_model.py
+1. !python train_imputer_and_model.py
     Save trained KNNImputer() as .pkl file.
     Save trained StandardScaler() as .pkl file.
     Save trained Sequential() model as .h5 file.
-!python test_imputer_and_model.py
+2. !python test_imputer_and_model.py
     Load trained KNNImputer() and impute test data
     Load trained StandardScaler() and standardize test data
     Load trained Sequential() model
