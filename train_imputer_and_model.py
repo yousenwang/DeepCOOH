@@ -49,9 +49,6 @@ Otherwise, the number of columns outputting will decrease
 
 from sklearn.experimental import enable_iterative_imputer
 from sklearn.impute import KNNImputer
-# from sklearn.impute import (
-#     SimpleImputer, KNNImputer, IterativeImputer, MissingIndicator)
-
 unimputed_X = labeled_train.copy()
 train_y = unimputed_X.pop(target)
 
@@ -71,39 +68,34 @@ unique_name = str(imputer.get_params).strip("<bound method BaseEstimator.get_par
 unique_name = get_valid_filename(unique_name)
 
 train_df = pd.DataFrame(imputer.fit_transform(unimputed_X), columns=unimputed_X_cols)
-#out_dat = pd.concat([out_dat_X, true_train_y], axis=1)
-
 
 pkl_name = config['imputer_pkl_name']
 save_object_as_pkl(imputer, pkl_name)
+del imputer
 
 
 features = config["selected_features"]
-
 if features == "all":
   train = train_df
 else:
   train = train_df[features]
 
 from sklearn.preprocessing import StandardScaler
-
 scaler = StandardScaler()
 normed_train_X = pd.DataFrame(scaler.fit_transform(train.to_numpy()), columns=train.columns)
 
 plk_name_stand = 'standardizer.pkl'
 save_object_as_pkl(scaler, plk_name_stand)
 print(f"{scaler} saved.")
+del scaler
 
 from _keras_model import build_model, PrintDot
-
 p = normed_train_X.shape[1]
 model = build_model(p)
-
 model.summary()
 
 
 import keras
-
 # The patience parameter is the amount of epochs to check for improvement
 early_stop = keras.callbacks.EarlyStopping(monitor='val_loss', patience=10)
 EPOCHS = 1000
@@ -114,3 +106,4 @@ early_history = model.fit(normed_train_X, train_y,
 model_name = 'DeepCOOH.h5'
 model.save(model_name) 
 print(f"{model_name} saved")
+del model

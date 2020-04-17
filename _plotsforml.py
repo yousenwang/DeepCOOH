@@ -11,7 +11,7 @@ sns.set_style('darkgrid')
 from scipy import stats
 from scipy.stats import norm, skew
 
-def plot_norm(feat_series):
+def plot_norm(feat_series, extend_name):
     fig = plt.figure()
     sns.distplot(feat_series , fit=norm);
     # Get the fitted parameters used by the function
@@ -22,18 +22,18 @@ def plot_norm(feat_series):
     plt.legend(['Normal dist. ($\mu=$ {:.2f} and $\sigma=$ {:.2f} )'.format(mu, sigma)],
                 loc='best')
     plt.ylabel('Frequency')
-    plt.title(f'{feat_series.name} distribution')
-    pic_name = f'{feat_series.name}_distribution.jpg'
+    plt.title(f'{feat_series.name} {extend_name} distribution')
+    pic_name = f'{feat_series.name}_{extend_name}_distribution.jpg'
     plt.savefig(pic_name)
     print(f"{pic_name} was produced.")
 
 
-def plot_QQ(feat_series):
+def plot_QQ(feat_series, extend_name):
     #Get also the QQ-plot
     fig = plt.figure()
     res = stats.probplot(feat_series, plot=plt)
-    plt.title(f'{feat_series.name} QQ plot')
-    pic_name = f'{feat_series.name}_QQ_plot.jpg'
+    plt.title(f'{feat_series.name} {extend_name} QQ plot')
+    pic_name = f'{feat_series.name}_{extend_name}_QQ_plot.jpg'
     plt.savefig(pic_name)
     print(f"{pic_name} was produced.")
 

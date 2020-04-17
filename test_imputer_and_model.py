@@ -69,7 +69,7 @@ plk_name_stand = 'standardizer.pkl'
 scaler = load_object_from_pkl(plk_name_stand)
 print(f"{scaler} loaded.")
 normed_test_X = pd.DataFrame(scaler.transform(test.to_numpy()), columns=test.columns)
-
+del scaler
 
 
 import tensorflow as tf
