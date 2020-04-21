@@ -71,7 +71,7 @@ train_df = pd.DataFrame(imputer.fit_transform(unimputed_X), columns=unimputed_X_
 
 pkl_name = config['imputer_pkl_name']
 save_object_as_pkl(imputer, pkl_name)
-del imputer
+
 
 
 features = config["selected_features"]
@@ -87,23 +87,38 @@ normed_train_X = pd.DataFrame(scaler.fit_transform(train.to_numpy()), columns=tr
 plk_name_stand = 'standardizer.pkl'
 save_object_as_pkl(scaler, plk_name_stand)
 print(f"{scaler} saved.")
-del scaler
+
 
 from _keras_model import build_model, PrintDot
 p = normed_train_X.shape[1]
 model = build_model(p)
 model.summary()
 
+import tensorflow as tf
+from tensorflow import keras
 
-import keras
+from tensorflow.keras.callbacks import EarlyStopping
 # The patience parameter is the amount of epochs to check for improvement
-early_stop = keras.callbacks.EarlyStopping(monitor='val_loss', patience=10)
+early_stop = EarlyStopping(monitor='val_loss', patience=10)
 EPOCHS = 1000
+
+from tensorflow_model_optimization.python.core.sparsity.keras import pruning_callbacks
+
+
+callbacks = [
+  early_stop, 
+  PrintDot(),
+  # Update the pruning step
+  pruning_callbacks.UpdatePruningStep(),
+  # Add summaries to keep track of the sparsity in different layers during training
+  pruning_callbacks.PruningSummaries(log_dir='/.')]
 early_history = model.fit(normed_train_X, train_y, 
                     epochs=EPOCHS, validation_split = 0.2, verbose=0, 
-                    callbacks=[early_stop, PrintDot()])
+                    callbacks=callbacks)
 
-model_name = 'DeepCOOH.h5'
-model.save(model_name) 
+# model_name = 'DeepCOOH.h5'
+# model.save(model_name) 
+# print(f"{model_name} saved")
+model_name = 'DeepCOOH'
+tf.keras.models.save_model(model, model_name)
 print(f"{model_name} saved")
-del model

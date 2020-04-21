@@ -69,13 +69,15 @@ plk_name_stand = 'standardizer.pkl'
 scaler = load_object_from_pkl(plk_name_stand)
 print(f"{scaler} loaded.")
 normed_test_X = pd.DataFrame(scaler.transform(test.to_numpy()), columns=test.columns)
-del scaler
 
 
 import tensorflow as tf
-model_name = 'DeepCOOH.h5'
+#model_name = 'DeepCOOH.h5'
+model_name = 'DeepCOOH'
 # Recreate the exact same model, including its weights and the optimizer
-model = tf.keras.models.load_model(model_name)
+import tensorflow_model_optimization as tfmot
+with tfmot.sparsity.keras.prune_scope():
+  model = tf.keras.models.load_model(model_name)
 
 # Show the model architecture
 model.summary()
